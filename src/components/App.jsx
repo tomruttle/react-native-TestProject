@@ -1,40 +1,5 @@
-import React, { PropTypes, Component, StyleSheet, Text, View, TouchableHighlight } from 'react-native';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF'
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10
-  },
-  flowRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'stretch'
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    alignSelf: 'center'
-  },
-  button: {
-    height: 36,
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#48BBEC',
-    borderColor: '#48BBEC',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    alignSelf: 'stretch',
-    justifyContent: 'center'
-  }
-});
+import React, { PropTypes, Component, Text, View, TouchableHighlight, ActivityIndicatorIOS } from 'react-native';
+import styles from '../ui/styles';
 
 export default class TestProject extends Component {
   static contextTypes = {
@@ -46,31 +11,62 @@ export default class TestProject extends Component {
   }
 
   componentDidMount() {
-    this.context.flux.stores.testStore.listen((state) => {
-      this.setState(state);
-    });
+    this.context.flux.stores.testStore.listen(this.setState.bind(this));
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.code !== this.state.code) {
+      this.context.flux.actions.testActions.getAuthToken(nextState.code);
+      return false;
+    }
+
+    if (nextState.accessToken !== this.state.accessToken) {
+      this.context.flux.actions.testActions.getUser(nextState.accessToken);
+      return false;
+    }
+
+    return true;
+  }
+
+  componentWillUnmount() {
+    this.context.flux.stores.testStore.unlisten(this.setState);
   }
 
   onGo() {
-    this.context.flux.actions.testActions.update();
+    if (!this.state.accessToken) {
+      this.context.flux.actions.testActions.login();
+      return;
+    }
+
+    this.context.flux.actions.testActions.getUser(this.state.accessToken);
   }
 
   render() {
+    const spinner = (this.state.isLoading)
+      ? <ActivityIndicatorIOS hidden="true" size="large" />
+      : <View />;
+
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Items: {this.state.items.map(item => <Text key={item}>{item}</Text>)}
+          {(this.state.user.name)
+            ? `You are logged in as: ${this.state.user.name}`
+            : 'You are not logged in. :('}
         </Text>
         <View style={styles.flowRight}>
-          <TouchableHighlight style={styles.button} onPress={() => this.onGo()}>
+          <TouchableHighlight style={styles.button} onPress={this.onGo.bind(this)}>
             <Text style={styles.buttonText}>Go</Text>
           </TouchableHighlight>
         </View>
+        {spinner}
       </View>
     );
   }
 
   state = {
-    items: []
+    code: null,
+    accessToken: null,
+    user: {},
+    isLoading: false
   }
 }

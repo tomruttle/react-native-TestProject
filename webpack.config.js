@@ -18,11 +18,16 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         loaders: ['babel?blacklist=validation.react']
+      },
+      {
+        test: /\.json$/,
+        exclude: /node_modules/,
+        loaders: ['json']
       }
     ]
   },
-  resolve: { 
-    extensions: ['', '.js', '.jsx'],
+  resolve: {
+    extensions: ['', '.js', '.jsx', '.json'],
     alias: {
       'react': 'react-native'
     }

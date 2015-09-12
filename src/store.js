@@ -1,6 +1,8 @@
 export default class testStore {
   _init() {
-    this.items = [];
+    this.code = null;
+    this.accessToken = null;
+    this.user = {};
   }
 
   constructor() {
@@ -8,7 +10,15 @@ export default class testStore {
     this.on('init', this._init);
   }
 
-  onUpdate(items) {
-    this.items = items;
+  onLogin(code) {
+    this.code = code;
+  }
+
+  onGetAuthToken(token) {
+    this.accessToken = token;
+  }
+
+  onGetUser(user) {
+    this.user = user;
   }
 }
