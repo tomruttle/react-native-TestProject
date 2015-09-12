@@ -1,6 +1,8 @@
 import React, { PropTypes, Component, Text, View, TouchableHighlight, ActivityIndicatorIOS } from 'react-native';
 import styles from '../ui/styles';
 
+const _userExists = (user) => (user && Object.keys(user).length > 0);
+
 export default class TestProject extends Component {
   static contextTypes = {
     flux: PropTypes.object.isRequired
@@ -11,40 +13,36 @@ export default class TestProject extends Component {
   }
 
   componentDidMount() {
-    this.context.flux.stores.testStore.listen(this.setState.bind(this));
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextState.code !== this.state.code) {
-      this.context.flux.actions.testActions.getAuthToken(nextState.code);
-      return false;
-    }
-
-    if (nextState.accessToken !== this.state.accessToken) {
-      this.context.flux.actions.testActions.getUser(nextState.accessToken);
-      return false;
-    }
-
-    return true;
+    this.context.flux.stores.testStore.listen(this.onStoreChange);
   }
 
   componentWillUnmount() {
-    this.context.flux.stores.testStore.unlisten(this.setState);
+    this.context.flux.stores.testStore.unlisten(this.onStoreChange);
   }
 
-  onGo() {
-    if (!this.state.accessToken) {
-      this.context.flux.actions.testActions.login();
-      return;
-    }
+  onLoginPress() {
+    this.context.flux.actions.testActions.login(this.state.accessToken);
+    this.setState({ isLoading: true });
+  }
 
-    this.context.flux.actions.testActions.getUser(this.state.accessToken);
+  onStoreChange = (state) => {
+    if (_userExists(state.user)) {
+      this.setState({ user: state.user, isLoading: false });
+    }
   }
 
   render() {
     const spinner = (this.state.isLoading)
       ? <ActivityIndicatorIOS hidden="true" size="large" />
       : <View />;
+
+    const button = (this.state.isLoading || _userExists(this.state.user))
+      ? <View />
+      : (<View style={styles.flowRight}>
+          <TouchableHighlight style={styles.button} onPress={this.onLoginPress.bind(this)}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableHighlight>
+        </View>);
 
     return (
       <View style={styles.container}>
@@ -53,19 +51,13 @@ export default class TestProject extends Component {
             ? `You are logged in as: ${this.state.user.name}`
             : 'You are not logged in. :('}
         </Text>
-        <View style={styles.flowRight}>
-          <TouchableHighlight style={styles.button} onPress={this.onGo.bind(this)}>
-            <Text style={styles.buttonText}>Go</Text>
-          </TouchableHighlight>
-        </View>
+        {button}
         {spinner}
       </View>
     );
   }
 
   state = {
-    code: null,
-    accessToken: null,
     user: {},
     isLoading: false
   }
