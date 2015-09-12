@@ -10,7 +10,7 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loaders: ['babel?stage=1&blacklist=validation.react']
+        loaders: ['babel']
       }
     ]
   },

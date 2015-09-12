@@ -585,7 +585,7 @@
 	        _reactNative2['default'].createElement(
 	          _reactNative.Text,
 	          { style: styles.welcome },
-	          'Welcome to React Native!!?'
+	          'Welcome to React Native.'
 	        ),
 	        _reactNative2['default'].createElement(
 	          _reactNative.Text,
