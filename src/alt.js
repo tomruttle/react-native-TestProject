@@ -7,5 +7,5 @@ export default class extends Alt {
     super(config);
     this.addActions('testActions', Actions);
     this.addStore('testStore', Store);
- }
+  }
 }

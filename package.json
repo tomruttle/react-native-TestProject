@@ -3,10 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "./node_modules/.bin/react-native-webpack-server start"
+    "start": "./node_modules/.bin/react-native-webpack-server start",
+    "lint": "eslint --ext .js,.jsx ./src",
+    "precommit": "npm run lint"
   },
   "dependencies": {
     "alt": "^0.17.3",
+    "husky": "^0.10.1",
     "react-native": "^0.10.1"
   },
   "devDependencies": {

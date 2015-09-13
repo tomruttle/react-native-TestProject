@@ -1,5 +1,5 @@
 import React from 'react-native';
-import withAltContext from 'alt/utils/withAltContext'
+import withAltContext from 'alt/utils/withAltContext';
 
 import Alt from './alt';
 import App from './components/App';
