@@ -25,10 +25,12 @@ export default class TestProject extends Component {
     this.setState({ isLoading: true });
   }
 
+  onLogoutPress() {
+    this.context.flux.actions.testActions.resetStore();
+  }
+
   onStoreChange = (state) => {
-    if (_userExists(state.user)) {
-      this.setState({ user: state.user, isLoading: false });
-    }
+    this.setState({ user: state.user, isLoading: false });
   }
 
   render() {
@@ -36,21 +38,31 @@ export default class TestProject extends Component {
       ? <ActivityIndicatorIOS hidden="true" size="large" />
       : <View />;
 
-    const button = (this.state.isLoading || _userExists(this.state.user))
-      ? <View />
-      : (<View style={styles.flowRight}>
-          <TouchableHighlight style={styles.button} onPress={this.onLoginPress.bind(this)}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableHighlight>
-        </View>);
+    let button;
+
+    if (this.state.isLoading) {
+      button = <View />;
+    } else if (_userExists(this.state.user)) {
+      button = (<View style={styles.flowRight}>
+        <TouchableHighlight style={styles.button} onPress={this.onLogoutPress.bind(this)}>
+          <Text style={styles.buttonText}>Log out</Text>
+        </TouchableHighlight>
+      </View>);
+    } else {
+      button = (<View style={styles.flowRight}>
+        <TouchableHighlight style={styles.button} onPress={this.onLoginPress.bind(this)}>
+          <Text style={styles.buttonText}>Log in</Text>
+        </TouchableHighlight>
+      </View>);
+    }
+
+    const text = (this.state.user.name)
+      ? <Text style={styles.welcome}>You are logged in as: {this.state.user.name}</Text>
+      : <View />;
 
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          {(this.state.user.name)
-            ? `You are logged in as: ${this.state.user.name}`
-            : 'You are not logged in. :('}
-        </Text>
+        {text}
         {button}
         {spinner}
       </View>

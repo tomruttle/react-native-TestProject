@@ -1,4 +1,8 @@
 export default class TestActions {
+  constructor() {
+    this.generateActions('resetStore');
+  }
+
   receivedCode(code) {
     this.dispatch(code);
     this.alt.stores.testStore.getAccessToken();

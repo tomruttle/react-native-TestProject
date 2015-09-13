@@ -13,12 +13,18 @@ export default class testStore {
     this.on('init', this._init);
   }
 
+  onResetStore() {
+    this._init();
+  }
+
   onReceivedCode(code) {
     this.code = code;
+    this.preventDefault();
   }
 
   onReceivedToken(token) {
     this.accessToken = token;
+    this.preventDefault();
   }
 
   onReceivedUser(user) {
