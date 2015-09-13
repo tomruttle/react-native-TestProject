@@ -3,6 +3,11 @@ export default class TestActions {
     this.generateActions('resetStore', 'isLoading');
   }
 
+  handleError(err) {
+    console.log('something went wrong...', err.toString());
+    this.dispatch();
+  }
+
   receivedCode(res) {
     const [, oauthState] = res.url.match(/state=(.*)$/);
     if (oauthState !== res.oauthState) {
@@ -21,10 +26,10 @@ export default class TestActions {
 
   receivedUser(user) {
     this.dispatch({ user, isLoading: false });
+    this.alt.stores.testStore.getNotifications();
   }
 
-  handleError(err) {
-    console.log('something went wrong...', err.toString());
-    this.dispatch();
+  receivedNotifications(notifications) {
+    this.dispatch({ notifications, isLoading: false });
   }
 }

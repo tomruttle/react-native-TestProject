@@ -3,7 +3,7 @@ import LinkingIOS from 'LinkingIOS';
 
 const status = (res) => {
   if (res.status >= 200 && res.status < 300) { return res; }
-  throw new Error(res.statusText);
+  throw new Error(res.statusText ? res.statusText : res.message);
 };
 
 const clientId = config.oauth.github.id;
@@ -22,7 +22,8 @@ export default (flux) => ({
           'https://github.com/login/oauth/authorize',
           `?client_id=${clientId}`,
           `&state=${oauthState}`,
-          `&redirect_uri=testproject://oauth`
+          '&redirect_uri=testproject://oauth',
+          '&scope=notifications'
         ].join(''));
         LinkingIOS.addEventListener('url', handleUrl);
       });
@@ -66,5 +67,22 @@ export default (flux) => ({
     loading: flux.actions.testActions.isLoading,
     success: flux.actions.testActions.receivedUser,
     error: flux.actions.testActions.handleError
+  },
+
+  getNotifications: {
+    remote(state) {
+      return fetch('https://api.github.com/notifications', {
+        method: 'get',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `token ${state.accessToken}`
+        }
+      }).then(status).then((res) => res.json());
+    },
+    loading: flux.actions.testActions.isLoading,
+    success: flux.actions.testActions.receivedNotifications,
+    error: flux.actions.testActions.handleError
   }
+
 });
