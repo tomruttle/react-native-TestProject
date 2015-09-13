@@ -37,7 +37,7 @@ export default class LoggedOut extends Component {
   render() {
     return (
       <View style={styles.loggedOutContainer}>
-        <Text style={styles.loggedOutMessage}>Github Notifications!!!</Text>
+        <Text style={styles.loggedOutMessage}>Github Notifications?!</Text>
         <Text style={styles.loggedOutSubMessage}>Log in to Github above to see them.</Text>
       </View>
     );

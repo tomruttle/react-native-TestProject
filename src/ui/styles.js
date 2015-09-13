@@ -7,12 +7,33 @@ export default StyleSheet.create({
     paddingTop: 50,
     backgroundColor: '#EAEAEA'
   },
+  boldText: {
+    fontWeight: '500',
+    color: '#222'
+  },
   notification: {
     backgroundColor: '#FFF',
     margin: 10,
     padding: 5,
     borderWidth: 1,
     borderColor: '#222'
+  },
+  notTitle: {
+    color: '#222',
+    fontWeight: '500',
+    fontSize: 17,
+    marginVertical: 5
+  },
+  notAvatar: {
+    width: 30,
+    height: 30,
+    marginVertical: 5,
+    marginRight: 10,
+    borderRadius: 15
+  },
+  notTimestamp: {
+    fontSize: 12,
+    opacity: 0.7
   },
   messageText: {
     fontSize: 17,
@@ -60,7 +81,7 @@ export default StyleSheet.create({
     height: 30,
     marginVertical: 5,
     marginRight: 10,
-    borderRadius: 14
+    borderRadius: 15
   },
   loggedOutContainer: {
     flex: 1,

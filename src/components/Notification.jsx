@@ -1,5 +1,6 @@
 import React, { PropTypes, Component, Text, View } from 'react-native';
 import moment from 'moment';
+// import Icon from 'react-native-vector-icons/Octicons';
 
 import styles from '../ui/styles';
 
@@ -8,11 +9,7 @@ export default class Notification extends Component {
     id: PropTypes.string.isRequired,
     updated_at: PropTypes.string.isRequired,
     repository: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      owner: PropTypes.shape({
-        avatar_url: PropTypes.string,
-        login: PropTypes.string
-      })
+      name: PropTypes.string.isRequired
     }).isRequired,
     subject: PropTypes.shape({
       title: PropTypes.string.isRequired,
@@ -26,12 +23,12 @@ export default class Notification extends Component {
   }
 
   render() {
+    const updatedTime = moment.duration(moment() - moment(this.props.updated_at)).humanize();
     return (
       <View style={styles.notification}>
-        <Text>Title: {this.props.subject.title}</Text>
+        <Text style={styles.notTimestamp}>From {updatedTime} ago, in the <Text style={styles.boldText}>{this.props.repository.name}</Text> repo comes:</Text>
+        <Text style={styles.notTitle}>{this.props.subject.title}</Text>
         <Text>Type: {this.props.subject.type}</Text>
-        <Text>Repo: {this.props.repository.name} (owned by {this.props.repository.owner.login})</Text>
-        <Text>Updated: {moment.duration(moment() - moment(this.props.updated_at)).humanize()} ago</Text>
       </View>
     );
   }
