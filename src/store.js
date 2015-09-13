@@ -1,3 +1,5 @@
+import sources from './sources';
+
 export default class testStore {
   _init() {
     this.code = null;
@@ -6,19 +8,20 @@ export default class testStore {
   }
 
   constructor() {
+    this.registerAsync(sources);
     this.bindActions(this.alt.actions.testActions);
     this.on('init', this._init);
   }
 
-  onLogin(code) {
+  onReceivedCode(code) {
     this.code = code;
   }
 
-  onGetAuthToken(token) {
+  onReceivedToken(token) {
     this.accessToken = token;
   }
 
-  onGetUser(user) {
+  onReceivedUser(user) {
     this.user = user;
   }
 }

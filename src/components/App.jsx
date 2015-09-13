@@ -21,7 +21,7 @@ export default class TestProject extends Component {
   }
 
   onLoginPress() {
-    this.context.flux.actions.testActions.login(this.state.accessToken);
+    this.context.flux.stores.testStore.login();
     this.setState({ isLoading: true });
   }
 
