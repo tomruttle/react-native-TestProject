@@ -22,7 +22,6 @@ export default class TestProject extends Component {
 
   onLoginPress() {
     this.context.flux.stores.testStore.login();
-    this.setState({ isLoading: true });
   }
 
   onLogoutPress() {
@@ -30,12 +29,16 @@ export default class TestProject extends Component {
   }
 
   onStoreChange = (state) => {
-    this.setState({ user: state.user, isLoading: false });
+    this.setState({ user: state.user, isLoading: state.isLoading });
   }
 
   render() {
     const spinner = (this.state.isLoading)
       ? <ActivityIndicatorIOS hidden="true" size="large" />
+      : <View />;
+
+    const text = (this.state.user.name)
+      ? <Text style={styles.welcome}>You are logged in as: {this.state.user.name}</Text>
       : <View />;
 
     let button;
@@ -55,10 +58,6 @@ export default class TestProject extends Component {
         </TouchableHighlight>
       </View>);
     }
-
-    const text = (this.state.user.name)
-      ? <Text style={styles.welcome}>You are logged in as: {this.state.user.name}</Text>
-      : <View />;
 
     return (
       <View style={styles.container}>

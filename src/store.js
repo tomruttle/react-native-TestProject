@@ -2,9 +2,9 @@ import sources from './sources';
 
 export default class testStore {
   _init() {
-    this.code = null;
     this.accessToken = null;
     this.user = {};
+    this.isLoading = false;
   }
 
   constructor() {
@@ -13,13 +13,16 @@ export default class testStore {
     this.on('init', this._init);
   }
 
+  onHandleError() {
+    this.isLoading = false;
+  }
+
   onResetStore() {
     this._init();
   }
 
-  onReceivedCode(code) {
-    this.code = code;
-    this.preventDefault();
+  onIsLoading() {
+    this.isLoading = true;
   }
 
   onReceivedToken(token) {
@@ -27,7 +30,8 @@ export default class testStore {
     this.preventDefault();
   }
 
-  onReceivedUser(user) {
-    this.user = user;
+  onReceivedUser(res) {
+    this.user = res.user;
+    this.isLoading = res.isLoading;
   }
 }
