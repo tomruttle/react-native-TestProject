@@ -14,7 +14,6 @@ export default class TestActions {
   }
 
   receivedUser(user) {
-    console.log('got user', user);
     this.dispatch(user);
   }
 
