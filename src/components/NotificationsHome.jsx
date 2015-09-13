@@ -1,7 +1,6 @@
-import React, { PropTypes, Component, Text, View, ActivityIndicatorIOS, ListView } from 'react-native';
+import React, { PropTypes, Component, ListView } from 'react-native';
 
 import Notification from './Notification';
-import styles from '../ui/styles';
 
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
@@ -28,19 +27,11 @@ export default class NotificationsHome extends Component {
   }
 
   render() {
-    const spinner = (this.state.isLoading)
-      ? <ActivityIndicatorIOS hidden="true" size="large" />
-      : <View />;
-
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Your Notifications</Text>
-        <ListView
-          dataSource={this.state.notifications}
-          renderRow={(rowData) => <Notification key={rowData.id} {...rowData} />}
-        />
-        {spinner}
-      </View>
+      <ListView
+        dataSource={this.state.notifications}
+        renderRow={(rowData) => <Notification key={rowData.id} {...rowData} />}
+      />
     );
   }
 

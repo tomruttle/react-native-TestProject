@@ -1,9 +1,7 @@
-import React, { PropTypes, Component, Text, View, TouchableHighlight, ActivityIndicatorIOS } from 'react-native';
+import React, { PropTypes, Component, View, Text } from 'react-native';
 
 import NotificationsHome from './NotificationsHome';
 import styles from '../ui/styles';
-
-const _userExists = (user) => (user && Object.keys(user).length > 0);
 
 export default class LoggedOut extends Component {
   static propTypes = {
@@ -26,65 +24,22 @@ export default class LoggedOut extends Component {
     this.context.flux.stores.testStore.unlisten(this.onStoreChange);
   }
 
-  onLoginPress() {
-    this.context.flux.stores.testStore.login();
-  }
-
-  onLogoutPress() {
-    this.context.flux.actions.testActions.resetStore();
-  }
-
   onStoreChange = (state) => {
-    const { user, isLoading, notifications } = state;
-    if (notifications.length) {
-      setTimeout(() => {
-        this.props.navigator.push({
-          name: 'NotificationsHome',
-          component: NotificationsHome
-        });
-      }, 5000);
+    if (state.notifications.length) {
+      this.props.navigator.push({
+        name: 'NotificationsHome',
+        component: NotificationsHome,
+        title: `Your Notifications (${state.notifications.length})`
+      });
     }
-    this.setState({ user, isLoading });
   }
 
   render() {
-    const spinner = (this.state.isLoading)
-      ? <ActivityIndicatorIOS hidden="true" size="large" />
-      : <View />;
-
-    const text = (this.state.user.name)
-      ? <Text style={styles.welcome}>You are logged in as: {this.state.user.name}</Text>
-      : <View />;
-
-    let button;
-
-    if (this.state.isLoading) {
-      button = <View />;
-    } else if (_userExists(this.state.user)) {
-      button = (<View style={styles.flowRight}>
-        <TouchableHighlight style={styles.button} onPress={this.onLogoutPress.bind(this)}>
-          <Text style={styles.buttonText}>Log out</Text>
-        </TouchableHighlight>
-      </View>);
-    } else {
-      button = (<View style={styles.flowRight}>
-        <TouchableHighlight style={styles.button} onPress={this.onLoginPress.bind(this)}>
-          <Text style={styles.buttonText}>Log in</Text>
-        </TouchableHighlight>
-      </View>);
-    }
-
     return (
-      <View style={styles.container}>
-        {text}
-        {button}
-        {spinner}
+      <View style={styles.loggedOutContainer}>
+        <Text style={styles.loggedOutMessage}>Github Notifications!!!</Text>
+        <Text style={styles.loggedOutSubMessage}>Log in to Github above to see them.</Text>
       </View>
     );
-  }
-
-  state = {
-    user: {},
-    isLoading: false
   }
 }
